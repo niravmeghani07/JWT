@@ -5,6 +5,7 @@ const port = 1000;
 const jwt = require('jsonwebtoken');
 app.use(express.json());
 
+//sample data
 const data = [
     {
         username: 'Nirav',
@@ -20,10 +21,14 @@ app.get('/',(req,res)=>{
     res.send('Hello World');
 })
 
+
+// Retrieving the data authorized to a perticular user after comparing tokens
 app.get('/posts',authenticateToken,(req,res)=>{
     res.json(data.filter(item => item.username === req.user.name));
 })
 
+
+//Creating a JWT of a user after logging in
 app.post('/login',(req,res)=>{
     const username= req.body.username;
     const user = { name: username};
@@ -31,6 +36,7 @@ app.post('/login',(req,res)=>{
     res.json({access_Token: access_token})
 })
 
+// Middleware to authenticate tokens from the authorization header of request
 function authenticateToken(req,res,next){
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
